@@ -178,10 +178,9 @@ def adjust_gamma(image, gamma):
 
 
 def equalize_contrast(image):
-    image_copy = np.copy(image)
     clahe = cv2.createCLAHE(clipLimit=2, tileGridSize=(8, 8))
-    image_copy = clahe.apply(image_copy)
-    return image_copy
+    image = clahe.apply(image)
+    return image
 
 
 def process_image(image):
