@@ -177,9 +177,17 @@ def adjust_gamma(image, gamma):
     return cv2.LUT(image, table)
 
 
+def equalize_contrast(image):
+    image_copy = np.copy(image)
+    clahe = cv2.createCLAHE(clipLimit=2, tileGridSize=(8, 8))
+    image_copy = clahe.apply(image_copy)
+    return image_copy
+
+
 def process_image(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = adjust_gamma(gray, 0.4)
+    gray = equalize_contrast(gray)
 
     hls = cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
 
