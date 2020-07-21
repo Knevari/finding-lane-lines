@@ -91,3 +91,49 @@ blur = cv2.GaussianBlur(masked_image, (kernel_size, kernel_size), 0)
 <img src="examples/canny.jpg" width="480" alt="Canny Edge Detection" />
 
 There are a handful of edge detection algorithms out there, [Canny](https://en.wikipedia.org/wiki/Canny_edge_detector#:~:text=The%20Canny%20edge%20detector%20is,explaining%20why%20the%20technique%20works.) does it based on gradient changes. It is important to notice that Canny also applies blurring in the beginning of the function, but we apply Gaussian Blur to smooth even more before detecting the edges
+
+### Region of Interest masking
+
+<img src="examples/roi.jpg" width="480" alt="Region of Interest" />
+
+```python
+mask = np.zeros_like(edges)
+
+ysize = edges.shape[0]
+xsize = edges.shape[1]
+
+left_bottom = (0, ysize)
+left_top = (xsize / 2 - 60, ysize / 2 + 50)
+
+right_bottom = (xsize, ysize)
+right_top = (xsize / 2 + 60, ysize / 2 + 50)
+
+vertices = np.array(
+    [[left_bottom, left_top, right_top, right_bottom]],
+    dtype=np.int32
+)
+
+cv2.fillPoly(mask, vertices, 255)
+masked_image = cv2.bitwise_and(mask, image)
+```
+
+Here we are first creating an blank image to use as our mask, the next step is to define the boundaries of the region we are considering, I used both bottom extremes and a slightly separated space on the top to form a polygon as you can see above, then we just need to return our masked image with cv2.bitwise_and()
+
+### Hough Transform
+
+<img src="examples/hough.jpg" width="480" alt="Hough Transform" />
+
+```python
+rho = 2
+theta = np.pi / 180
+threshold = 15
+starting_lines = np.array([])
+min_line_length = 30
+max_line_gap = 120
+
+lines = cv2.HoughLinesP(masked_image, rho, theta, threshold, starting_lines, 
+                        min_line_length, max_line_gap)
+```
+
+Now we have everything we need to find the lane lines, the demarcated area is taking most of the space where the lane lines possibly are and we boiled out most of the unnecessary details. All that is left is use the hough transform lines detection algorithm to detect some line segments and average these lines to a single line in both sides.
+OpenCV function HoughLinesP receives a big number of parameters and we need to pay attention to those values to have a acceptable result
