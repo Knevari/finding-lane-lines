@@ -136,4 +136,12 @@ lines = cv2.HoughLinesP(masked_image, rho, theta, threshold, starting_lines,
 ```
 
 Now we have everything we need to find the lane lines, the demarcated area is taking most of the space where the lane lines possibly are and we boiled out most of the unnecessary details. All that is left is use the hough transform lines detection algorithm to detect some line segments and average these lines to a single line in both sides.
-OpenCV function HoughLinesP receives a big number of parameters and we need to pay attention to those values to have a acceptable result
+
+It is important to notice that OpenCV function HoughLinesP receives a big number of parameters and we need to pay attention to those values to have a acceptable result.
+
+### Diving lane lines and transforming both into a single line
+
+<img src="https://latex.codecogs.com/svg.latex?y%20=%20mx%20+%20b" width="15%" height="480" alt="Line equation" />
+
+This was by far the hardest part of the project, at first I tried taking the simple average of both slope and y-intercept of all lane lines, but the result was totally different from what I was expecting, the other solution was to take the weighted average of both, having fixed y values it was easy to find the x coordinates and form a single line
+
