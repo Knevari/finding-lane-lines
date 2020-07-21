@@ -179,7 +179,7 @@ def adjust_gamma(image, gamma):
 
 def process_image(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # gray = adjust_gamma(gray, 0.4)
+    gray = adjust_gamma(gray, 0.4)
 
     hls = cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
 
@@ -199,13 +199,14 @@ def process_image(image):
     edges = cv2.Canny(blur, 50, 150)
     roi = get_roi(edges)
     lines = hough_lines(roi, 2, np.pi / 180, 20, 30, 130)
+
     # For parameter tuning purposes
     color_edges = np.dstack((edges, edges, edges))
     edges_output = cv2.addWeighted(color_edges, .8, lines, 1, 0)
 
     image_output = cv2.addWeighted(image, .8, lines, 1, 0)
 
-    return image_output, gray
+    return image_output, edges_output
 
 
 def main():
@@ -234,8 +235,6 @@ def main():
             output, edges = process_image(frame)
             out.write(output)
 
-            cv2.waitKey(0)
-            cv2.imwrite("examples/grayscale_img.jpg", edges)
             cv2.imshow("Edges Frame", edges)
             cv2.imshow("Modified Frame", output)
 
