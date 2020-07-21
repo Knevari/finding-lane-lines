@@ -27,7 +27,7 @@ This is the first project of Udacity's self driving car engineer nanodegree. I h
 
 #### Converting the image to grayscale
 
-<img src="examples/grayscale_img.jpg" width="480" alt="Grayscale Image" />
+<img src="examples/grayscale_img.jpg" width="100%" height="480" alt="Grayscale Image" />
 
 ```python
 image = mpimg.imread("images/example.jpg")
@@ -38,11 +38,11 @@ It's easier for us to work with grayscale images because they have fewer details
 
 #### After adjusting the grayscale image gamma
 
-<img src="examples/dark_grayscale_img.jpg" width="480" alt="Dark Grayscale Image" />
+<img src="examples/dark_grayscale_img.jpg" width="100%" height="480" alt="Dark Grayscale Image" />
 
 #### Convert original BGR image to HLS
 
-<img src="examples/hls_img.jpg" width="480" alt="HLS Image" />
+<img src="examples/hls_img.jpg" width="100%" height="480" alt="HLS Image" />
 
 ```python
 hls_image = cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
@@ -52,7 +52,7 @@ We convert from BGR color space to HLS because we can retrieve color information
 
 #### Create masks to filter out unnecessary details
 
-<img src="examples/masks.jpg" width="480" alt="Masks" />
+<img src="examples/masks.jpg" width="100%" height="480" alt="Masks" />
 
 ```python
 lower_white = np.array([0, 210, 0], dtype=np.uint8)
@@ -70,14 +70,14 @@ We try to find parts of the image which are within our white and yellow color ra
 
 #### Apply the created mask to our gray image
 
-<img src="examples/masked_img.jpg" width="480" alt="Masked Image" />
+<img src="examples/masked_img.jpg" width="100%" height="480" alt="Masked Image" />
 
 ```python
 masked_image = cv2.bitwise_and(gray, combined_masks)
 ```
 #### Apply Gaussian Blur
 
-<img src="examples/gaussian_blur.jpg" width="480" alt="Gaussian Blur" />
+<img src="examples/gaussian_blur.jpg" width="100%" height="480" alt="Gaussian Blur" />
 
 ```python
 kernel_size = 5
@@ -88,13 +88,13 @@ blur = cv2.GaussianBlur(masked_image, (kernel_size, kernel_size), 0)
 
 #### Canny Edge Detection
 
-<img src="examples/canny.jpg" width="480" alt="Canny Edge Detection" />
+<img src="examples/canny.jpg" width="100%" height="480" alt="Canny Edge Detection" />
 
 There are a handful of edge detection algorithms out there, [Canny](https://en.wikipedia.org/wiki/Canny_edge_detector#:~:text=The%20Canny%20edge%20detector%20is,explaining%20why%20the%20technique%20works.) does it based on gradient changes. It is important to notice that Canny also applies blurring in the beginning of the function, but we apply Gaussian Blur to smooth even more before detecting the edges
 
 ### Region of Interest masking
 
-<img src="examples/roi.jpg" width="480" alt="Region of Interest" />
+<img src="examples/roi.jpg" width="100%" height="480" alt="Region of Interest" />
 
 ```python
 mask = np.zeros_like(edges)
@@ -121,7 +121,7 @@ Here we are first creating an blank image to use as our mask, the next step is t
 
 ### Hough Transform
 
-<img src="examples/hough.jpg" width="100%" height="540" alt="Hough Transform" />
+<img src="examples/hough.jpg" width="100%" height="480" alt="Hough Transform" />
 
 ```python
 rho = 2
