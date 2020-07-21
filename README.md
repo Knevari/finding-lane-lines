@@ -21,7 +21,9 @@ This is the first project of Udacity's self driving car engineer nanodegree. I h
 9. Get the average slope and y-intercept of all lines all generate one single line for each lane
 
 #### Converting the image to grayscale
+
 <img src="examples/grayscale_img.jpg" width="480" alt="Grayscale Image" />
+
 ```python
 image = mpimg.imread("images/example.jpg")
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -29,16 +31,20 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 It's easier for us to work with grayscale images because they have fewer details than color images, after converting from BGR to gray we then adjust (optional) the image gamma to facilitate the feature extraction from the image
 
 #### After adjusting the grayscale image gamma
+
 <img src="examples/dark_grayscale_img.jpg" width="480" alt="Dark Grayscale Image" />
 
 #### Convert original BGR image to HLS
+
 <img src="examples/hls_img.jpg" width="480" alt="HLS Image" />
+
 ```python
 hls_image = cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
 ```
 We convert from BGR color space to HLS because we can retrieve color information more easily than in plain BGR
 
 #### Create masks to filter out unnecessary details
+
 <img src="examples/masks.jpg" width="480" alt="Masks" />
 ```python
 lower_white = np.array([0, 210, 0], dtype=np.uint8)
@@ -54,11 +60,13 @@ combined_masks = cv2.bitwise_or(white_mask, yellow_mask)
 We try to find parts of the image which are within our white and yellow color ranges and then create a single mask using OpenCV bitwise_or function
 
 #### Apply the created mask to our gray image
+
 <img src="examples/masks.jpg" width="480" alt="Masks" />
 ```python
 masked_image = cv2.bitwise_and(gray, combined_masks)
 ```
 #### Apply Gaussian Blur
+
 <img src="examples/gaussian_blur.jpg" width="480" alt="Gaussian Blur" />
 ```python
 kernel_size = 5
