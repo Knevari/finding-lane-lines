@@ -121,7 +121,7 @@ Here we are first creating an blank image to use as our mask, the next step is t
 
 ### Hough Transform
 
-<img src="examples/hough.jpg" width="480" alt="Hough Transform" />
+<img src="examples/hough.jpg" width="100%" height="540" alt="Hough Transform" />
 
 ```python
 rho = 2
