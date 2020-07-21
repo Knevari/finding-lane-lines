@@ -70,7 +70,7 @@ We try to find parts of the image which are within our white and yellow color ra
 
 #### Apply the created mask to our gray image
 
-<img src="examples/masks.jpg" width="480" alt="Masks" />
+<img src="examples/masked_img.jpg" width="480" alt="Masked Image" />
 
 ```python
 masked_image = cv2.bitwise_and(gray, combined_masks)
@@ -87,5 +87,7 @@ blur = cv2.GaussianBlur(masked_image, (kernel_size, kernel_size), 0)
 [Gaussian Blur](https://en.wikipedia.org/wiki/Gaussian_blur#:~:text=In%20image%20processing%2C%20a%20Gaussian,image%20noise%20and%20reduce%20detail) is a widely used effect in computer graphics to reduce the image noise and detail, after running our image through the OpenCV GaussianBlur function the output is a smoothed image that we need to feed the edge detection algorithm. This function receives 3 parameters, the image, kernel_size and the standard deviation
 
 #### Canny Edge Detection
+
+<img src="examples/canny.jpg" width="480" alt="Canny Edge Detection" />
 
 There are a handful of edge detection algorithms out there, [Canny](https://en.wikipedia.org/wiki/Canny_edge_detector#:~:text=The%20Canny%20edge%20detector%20is,explaining%20why%20the%20technique%20works.) does it based on gradient changes. It is important to notice that Canny also applies blurring in the beginning of the function, but we apply Gaussian Blur to smooth even more before detecting the edges
