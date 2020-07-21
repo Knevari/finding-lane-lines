@@ -144,7 +144,7 @@ It is important to notice that OpenCV function HoughLinesP receives a big number
 <img src="examples/result.jpg" width="100%" height="480" alt="Final Result" />
 
 <p align="center">
-    <img src="https://latex.codecogs.com/svg.latex?y%20=%20mx%20+%20b" width="15%" alt="Line equation" />
+    <img src="https://latex.codecogs.com/svg.latex?y%20=%20mx%20+%20b" width="18%" alt="Line equation" />
 </p>
 
 This was by far the hardest part of the project, at first I tried taking the simple average of both slope and y-intercept of all lane lines, but the result was totally different from what I expected, the other solution was to take the weighted average of both, having fixed y values it was easy to find the x coordinates and form a single line
