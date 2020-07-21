@@ -27,7 +27,7 @@ This is the first project of Udacity's self driving car engineer nanodegree. I h
 
 #### Converting the image to grayscale
 
-<img src="examples/grayscale_img.jpg" width="480" alt="Grayscale Image" />
+<img src="examples/grayscale_img.jpg" width="100%" height="480" alt="Grayscale Image" />
 
 ```python
 image = mpimg.imread("images/example.jpg")
@@ -38,11 +38,11 @@ It's easier for us to work with grayscale images because they have fewer details
 
 #### After adjusting the grayscale image gamma
 
-<img src="examples/dark_grayscale_img.jpg" width="480" alt="Dark Grayscale Image" />
+<img src="examples/dark_grayscale_img.jpg" width="100%" height="480" alt="Dark Grayscale Image" />
 
 #### Convert original BGR image to HLS
 
-<img src="examples/hls_img.jpg" width="480" alt="HLS Image" />
+<img src="examples/hls_img.jpg" width="100%" height="480" alt="HLS Image" />
 
 ```python
 hls_image = cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
@@ -52,7 +52,7 @@ We convert from BGR color space to HLS because we can retrieve color information
 
 #### Create masks to filter out unnecessary details
 
-<img src="examples/masks.jpg" width="480" alt="Masks" />
+<img src="examples/masks.jpg" width="100%" height="480" alt="Masks" />
 
 ```python
 lower_white = np.array([0, 210, 0], dtype=np.uint8)
@@ -70,14 +70,14 @@ We try to find parts of the image which are within our white and yellow color ra
 
 #### Apply the created mask to our gray image
 
-<img src="examples/masked_img.jpg" width="480" alt="Masked Image" />
+<img src="examples/masked_img.jpg" width="100%" height="480" alt="Masked Image" />
 
 ```python
 masked_image = cv2.bitwise_and(gray, combined_masks)
 ```
 #### Apply Gaussian Blur
 
-<img src="examples/gaussian_blur.jpg" width="480" alt="Gaussian Blur" />
+<img src="examples/gaussian_blur.jpg" width="100%" height="480" alt="Gaussian Blur" />
 
 ```python
 kernel_size = 5
@@ -88,6 +88,69 @@ blur = cv2.GaussianBlur(masked_image, (kernel_size, kernel_size), 0)
 
 #### Canny Edge Detection
 
-<img src="examples/canny.jpg" width="480" alt="Canny Edge Detection" />
+<img src="examples/canny.jpg" width="100%" height="480" alt="Canny Edge Detection" />
 
 There are a handful of edge detection algorithms out there, [Canny](https://en.wikipedia.org/wiki/Canny_edge_detector#:~:text=The%20Canny%20edge%20detector%20is,explaining%20why%20the%20technique%20works.) does it based on gradient changes. It is important to notice that Canny also applies blurring in the beginning of the function, but we apply Gaussian Blur to smooth even more before detecting the edges
+
+### Region of Interest masking
+
+<img src="examples/roi.jpg" width="100%" height="480" alt="Region of Interest" />
+
+```python
+mask = np.zeros_like(edges)
+
+ysize = edges.shape[0]
+xsize = edges.shape[1]
+
+left_bottom = (0, ysize)
+left_top = (xsize / 2 - 60, ysize / 2 + 50)
+
+right_bottom = (xsize, ysize)
+right_top = (xsize / 2 + 60, ysize / 2 + 50)
+
+vertices = np.array(
+    [[left_bottom, left_top, right_top, right_bottom]],
+    dtype=np.int32
+)
+
+cv2.fillPoly(mask, vertices, 255)
+masked_image = cv2.bitwise_and(mask, image)
+```
+
+Here we are first creating an blank image to use as our mask, the next step is to define the boundaries of the region we are considering, I used both bottom extremes and a slightly separated space on the top to form a polygon as you can see above, then we just need to return our masked image with cv2.bitwise_and()
+
+### Hough Transform
+
+<img src="examples/hough.jpg" width="100%" height="480" alt="Hough Transform" />
+
+```python
+rho = 2
+theta = np.pi / 180
+threshold = 15
+starting_lines = np.array([])
+min_line_length = 30
+max_line_gap = 120
+
+lines = cv2.HoughLinesP(masked_image, rho, theta, threshold, starting_lines, 
+                        min_line_length, max_line_gap)
+```
+
+Now we have everything we need to find the lane lines, the demarcated area is taking most of the space where the lane lines possibly are and we boiled out most of the unnecessary details. All that is left is use the hough transform lines detection algorithm to detect some line segments and average these lines to a single line in both sides.
+
+It is important to notice that OpenCV function HoughLinesP receives a big number of parameters and we need to pay attention to those values to have a acceptable result.
+
+### Diving lane lines and transforming both into a single line
+
+<img src="examples/result.jpg" width="100%" height="480" alt="Final Result" />
+
+<p align="center">
+    <img src="https://latex.codecogs.com/svg.latex?y%20=%20mx%20+%20b" width="20%" alt="Line equation" />
+</p>
+
+This was by far the hardest part of the project, at first I tried taking the simple average of both slope and y-intercept of all lane lines, but the result was totally different from what I expected, the other solution was to take the weighted average of both, having fixed y values it was easy to find the x coordinates and form a single line
+
+<p align="center">
+    <img src="https://latex.codecogs.com/svg.latex?x%20=%20(y%20-%20b)%20/%20m" width="20%" alt="Line equation" />
+</p>
+
+I just had to iterate over all lines, calculating the slope and y-intercept, take the weighted average and then solve for x to have the desired line coordinates.
